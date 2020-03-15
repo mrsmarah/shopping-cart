@@ -1,45 +1,61 @@
 /* global Cart */
 'use strict';
 
-// Create an event listener so that when the delete link is clicked, the removeItemFromCart method is invoked.
-var table = document.getElementById('cart');
-table.addEventListener('click', removeItemFromCart);
-var cart;
+getItem2();
 
-function loadCart() {
-  var cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-  cart = new Cart(cartItems);
+function cartRender(){
+    var tableEl = document.getElementById('cart');
+    cart.textContent = "";
+
+    for (var i=0 ; i < itemCart.length ; i++){
+        var trEl = document.createElement('tr');
+        tableEl.appendChild(trEl);
+        var tdEl = document.createElement('td');
+        trEl.appendChild(tdEl);
+        var buttonEl = document.createElement('button');
+        tdEl.appendChild(buttonEl);
+        buttonEl.setAttribute('class', 'remove-btn'); 
+        buttonEl.setAttribute('id', itemCart[i].name);
+        var pEl=document.createElement('p');
+        buttonEl.appendChild(pEl);
+        pEl.setAttribute("id",itemCart[i].name);
+        pEl.setAttribute('class', 'remove-btn');
+        pEl.textContent= "Remove from the cart"  
+        var tdEl = document.createElement('td');
+        trEl.appendChild(tdEl);
+        tdEl.textContent =`${itemQuantity[i]}`;
+        var tdEl = document.createElement('td');
+        trEl.appendChild(tdEl);
+        var imgEl = document.createElement('img');
+        tdEl.appendChild(imgEl);
+        imgEl.setAttribute('src', itemCart[i].urlImage );
+        imgEl.setAttribute('alt', itemCart[i].name );
 }
-
-// Make magic happen --- re-pull the Cart, clear out the screen and re-draw it
-function renderCart() {
-  loadCart();
-  clearCart();
-  showCart();
 }
+cartRender();
 
-// TODO: Remove all of the rows (tr) in the cart table (tbody)
-function clearCart() {}
+  tableEl.addEventListener('click', deleteBtn);
 
-// TODO: Fill in the <tr>'s under the <tbody> for each item in the cart
-function showCart() {
-
-  // TODO: Find the table body
-
-  // TODO: Iterate over the items in the cart
-  // TODO: Create a TR
-  // TODO: Create a TD for the delete link, quantity,  and the item
-  // TODO: Add the TR to the TBODY and each of the TD's to the TR
-
+  function deleteBtn(e){
+    e.preventDefault();
+    for( var i=0 ; i<itemCart.length ; i++ ){
+        if (e.target.id == itemCart[i].name){
+            if (itemQuantity[i] === 0){
+                itemQuantity.splice(i,1);
+                itemCart.splice(i,1);
+                cartRender();
+                }
+            if (itemQuantity[i] > 0){
+                itemQuantity[i] = itemQuantity[i] -1;
+                if (itemQuantity[i] === 0){
+                    itemQuantity.splice(i,1);
+                    itemCart.splice(i,1);
+                    cartRender();
+                    }
+                setItem2();
+                cartRender();
+            }
+    }
+      
+  }
 }
-
-function removeItemFromCart(event) {
-
-  // TODO: When a delete link is clicked, use cart.removeItem to remove the correct item
-  // TODO: Save the cart back to local storage
-  // TODO: Re-draw the cart table
-
-}
-
-// This will initialize the page and draw the cart on screen
-renderCart();
